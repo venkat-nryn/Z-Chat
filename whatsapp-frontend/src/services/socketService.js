@@ -6,9 +6,13 @@ class SocketService {
   }
 
   connect(token) {
-    this.socket = io(import.meta.env.VITE_SOCKET_URL, {
+    // Use environment variable for socket URL
+    const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+    
+    this.socket = io(SOCKET_URL, {
       auth: { token },
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'], // Add polling fallback for production
+      path: '/socket.io',
     });
 
     this.socket.on('connect', () => {
